@@ -24,7 +24,7 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      Username :
+      Mon nom :
       <input required onChange={handleOnChange} value={username} type="text" />
       <button type="submit">Connexion</button>
     </form>
