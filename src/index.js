@@ -1,12 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { createStore, compose, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import { IntlProvider } from "react-intl";
+import thunk from "redux-thunk";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import reducers from "./reducers";
+import App from "./App";
+import logMiddleware from "./middleware/log";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const LOCALE = "fr";
+const messages = {
+  en: {
+    title: "JoliCat 🇬🇧"
+  },
+  fr: {
+    title: "JoliChat 🇫🇷"
+  }
+};
+
+const store = createStore(
+  reducers,
+  compose(
+    applyMiddleware(thunk, logMiddleware),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  )
+);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <IntlProvider locale={LOCALE} messages={messages[LOCALE]}>
+      <App />
+    </IntlProvider>
+  </Provider>,
+  document.getElementById("root")
+);
